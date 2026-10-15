@@ -1,0 +1,305 @@
+# COLINHA DE ESTUDO — COMO CONECTEI AS PARTES DO MEU PROJETO ANGULAR
+
+## 1. Como o projeto funciona?
+
+Meu projeto de tarefas é dividido em arquivos, e cada um tem uma responsabilidade:
+
+1. **`tarefa.ts`** — define quais informações uma tarefa precisa ter.
+2. **`tarefa-service.ts`** — armazena, consulta, conclui e remove tarefas.
+3. **`cadastrar-tarefa.ts`** — contém a lógica para cadastrar uma tarefa.
+4. **`cadastrar-tarefa.html`** — mostra o formulário de cadastro.
+5. **`lista-tarefas.ts`** — contém a lógica para exibir, concluir e remover tarefas.
+6. **`lista-tarefas.html`** — mostra as tarefas na tela.
+7. **`app.routes.ts`** — define qual componente aparece em cada endereço.
+8. **`app.ts` e `app.html`** — configuram a estrutura principal e o espaço onde as páginas são exibidas.
+9. **Arquivos `.css`** — definem a aparência dos elementos.
+
+---
+
+## 2. Como conectei os arquivos?
+
+### A) `tarefa.ts` — modelo da tarefa
+
+```typescript
+export interface Tarefa {
+  nome: string;
+  prazo: string;
+  concluida: boolean;
+}
+```
+
+- `interface`: define o formato de um objeto.
+- `Tarefa`: nome da interface.
+- `nome: string`: guarda o nome da tarefa como texto.
+- `prazo: string`: guarda a data como texto.
+- `concluida: boolean`: informa se a tarefa está concluída (`true`) ou pendente (`false`).
+- `export`: permite que outros arquivos utilizem a interface.
+
+**Por que criei isso?** Para padronizar as informações de todas as tarefas.
+
+### B) `tarefa-service.ts` — serviço
+
+```typescript
+import { Injectable } from '@angular/core';
+import { Tarefa } from './tarefa';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class TarefaService {
+  private tarefas: Tarefa[] = [];
+
+  listar(): Tarefa[] {
+    return this.tarefas;
+  }
+
+  adicionar(tarefa: Tarefa): void {
+    this.tarefas.push(tarefa);
+  }
+
+  remover(index: number): void {
+    this.tarefas.splice(index, 1);
+  }
+
+  marcarConcluida(index: number): void {
+    this.tarefas[index].concluida = true;
+  }
+}
+```
+
+- `import`: permite usar recursos definidos em outros arquivos.
+- `Injectable`: informa ao Angular que a classe pode ser disponibilizada como serviço.
+- `providedIn: 'root'`: disponibiliza o serviço globalmente na aplicação.
+- `export class TarefaService`: declara e exporta a classe do serviço.
+- `private tarefas: Tarefa[] = []`: cria uma lista vazia de tarefas.
+- `listar()`: devolve a lista de tarefas.
+- `return`: devolve um valor para quem chamou o método.
+- `adicionar()`: recebe uma tarefa e usa `push()` para adicioná-la à lista.
+- `remover()`: usa `splice()` para retirar uma tarefa pela posição.
+- `marcarConcluida()`: altera a propriedade `concluida` para `true`.
+
+**Por que criei isso?** Para centralizar a manipulação das tarefas em um único lugar, compartilhado pelos componentes.
+
+### C) Como conectei os componentes ao serviço?
+
+No arquivo `cadastrar-tarefa.ts`:
+
+```typescript
+import { TarefaService } from '../tarefa-service';
+
+constructor(
+  private tarefaService: TarefaService
+) {}
+```
+
+- `import`: permite utilizar a classe `TarefaService`.
+- `constructor`: recebe as dependências necessárias para o componente.
+- `private tarefaService: TarefaService`: pede ao Angular que forneça o serviço e permite acessá-lo por meio de `this.tarefaService`.
+- `this`: referencia o objeto atual, neste caso, o componente.
+
+Essa conexão é chamada de **injeção de dependência**.
+
+**Por que fiz isso?** Para que o componente de cadastro e o componente de listagem acessem o mesmo serviço e trabalhem com a mesma lista.
+
+### D) `cadastrar-tarefa.ts` — lógica do cadastro
+
+```typescript
+nome: string = '';
+prazo: string = '';
+
+cadastrar(): void {
+  const novaTarefa = {
+    nome: this.nome,
+    prazo: this.prazo,
+    concluida: false
+  };
+
+  this.tarefaService.adicionar(novaTarefa);
+}
+```
+
+- `nome` e `prazo`: variáveis que guardam os valores digitados.
+- `cadastrar()`: método executado para cadastrar a tarefa.
+- `const novaTarefa`: cria um objeto com as informações preenchidas.
+- `this.nome` e `this.prazo`: acessam os valores guardados nas variáveis do componente.
+- `concluida: false`: define que uma tarefa nova começa pendente.
+- `this.tarefaService.adicionar(novaTarefa)`: envia o objeto ao serviço para ser armazenado.
+- `void`: indica que o método não retorna um valor.
+
+**Por que fiz isso?** Para reunir os dados preenchidos, criar a tarefa e enviá-la ao serviço.
+
+### E) `cadastrar-tarefa.html` — formulário
+
+```html
+<form (ngSubmit)="cadastrar()">
+  <label for="nome">Nome da tarefa:</label>
+  <input
+    id="nome"
+    type="text"
+    name="nome"
+    [(ngModel)]="nome"
+    required
+  />
+
+  <label for="prazo">Prazo de conclusão:</label>
+  <input
+    id="prazo"
+    type="date"
+    name="prazo"
+    [(ngModel)]="prazo"
+    required
+  />
+
+  <button type="submit">Cadastrar</button>
+</form>
+```
+
+- `<form>`: agrupa os campos do formulário.
+- `<input>`: cria um campo para digitar ou selecionar informações.
+- `type="text"`: cria um campo de texto.
+- `type="date"`: cria um campo para selecionar uma data.
+- `name`: identifica o campo no formulário.
+- `[(ngModel)]="nome"`: sincroniza o campo com a variável `nome`.
+- `[(ngModel)]="prazo"`: sincroniza o campo com a variável `prazo`.
+- `required`: indica que o campo é obrigatório.
+- `(ngSubmit)="cadastrar()"`: chama o método `cadastrar()` quando o formulário é enviado.
+- `type="submit"`: faz o botão enviar o formulário.
+
+Para usar `ngModel`, o componente precisa importar `FormsModule`.
+
+**Por que conectei o HTML ao TypeScript?** Porque o HTML exibe os campos, enquanto o TypeScript guarda os valores e executa o cadastro.
+
+### F) `lista-tarefas.ts` — lógica da listagem
+
+```typescript
+import { TarefaService } from '../tarefa-service';
+import { Tarefa } from '../tarefa';
+
+export class ListaTarefas {
+  tarefas: Tarefa[] = [];
+
+  constructor(private tarefaService: TarefaService) {
+    this.tarefas = this.tarefaService.listar();
+  }
+
+  concluir(index: number): void {
+    this.tarefaService.marcarConcluida(index);
+    this.tarefas = this.tarefaService.listar();
+  }
+
+  remover(index: number): void {
+    this.tarefaService.remover(index);
+    this.tarefas = this.tarefaService.listar();
+  }
+}
+```
+
+- `import { Tarefa }`: permite usar o modelo da tarefa.
+- `tarefas: Tarefa[] = []`: cria a variável que recebe a lista.
+- `constructor`: recebe o serviço e consulta as tarefas assim que o componente é criado.
+- `listar()`: recupera as tarefas do serviço.
+- `concluir(index)`: solicita ao serviço que conclua a tarefa daquela posição.
+- `remover(index)`: solicita ao serviço que remova a tarefa daquela posição.
+- `this.tarefas = this.tarefaService.listar()`: atualiza a variável do componente com a lista atual.
+
+**Por que fiz isso?** Para que a tela consiga acessar e manipular os dados armazenados no serviço.
+
+### G) `lista-tarefas.html` — mostrando as tarefas
+
+```html
+@for (tarefa of tarefas; track $index) {
+  <div>
+    <h3 [class.concluida]="tarefa.concluida">
+      {{ tarefa.nome }}
+    </h3>
+
+    <p>Prazo: {{ tarefa.prazo }}</p>
+
+    <button (click)="concluir($index)">Concluir</button>
+    <button (click)="remover($index)">Remover</button>
+  </div>
+}
+```
+
+- `@for`: percorre a lista e cria um bloco para cada tarefa.
+- `tarefa of tarefas`: percorre a lista `tarefas`, usando `tarefa` para representar o item atual.
+- `track $index`: identifica cada item pela posição na lista.
+- `{{ tarefa.nome }}`: mostra o nome da tarefa.
+- `{{ tarefa.prazo }}`: mostra o prazo.
+- `[class.concluida]="tarefa.concluida"`: aplica a classe CSS quando a tarefa está concluída.
+- `(click)="concluir($index)"`: chama o método `concluir()` quando o botão é clicado.
+- `(click)="remover($index)"`: chama o método `remover()` quando o botão é clicado.
+
+**Por que fiz isso?** Para transformar os dados da lista em elementos visíveis e permitir que o usuário interaja com eles.
+
+### H) `app.routes.ts` — navegação
+
+```typescript
+import { CadastrarTarefa } from './cadastrar-tarefa/cadastrar-tarefa';
+import { ListaTarefas } from './lista-tarefas/lista-tarefas';
+
+export const routes = [
+  { path: 'cadastrar-tarefa', component: CadastrarTarefa },
+  { path: 'lista-tarefas', component: ListaTarefas }
+];
+```
+
+- `path`: define o endereço da página.
+- `component`: define qual componente será exibido naquele endereço.
+- `export`: permite disponibilizar a configuração de rotas para o restante da aplicação.
+
+**Por que fiz isso?** Para o Angular saber qual página abrir quando o endereço mudar.
+
+### I) `app.html` — estrutura principal
+
+```html
+<nav>
+  <a routerLink="/cadastrar-tarefa">Cadastrar tarefa</a>
+  <a routerLink="/lista-tarefas">Ver tarefas</a>
+</nav>
+
+<router-outlet></router-outlet>
+```
+
+- `<nav>`: agrupa os links de navegação.
+- `routerLink`: permite navegar para uma rota.
+- `<router-outlet>`: marca o local onde o Angular exibe o componente da rota atual.
+
+Para usar `routerLink`, o componente que contém os links precisa importar `RouterLink`. Para usar a navegação por código com `this.router.navigate(...)`, é necessário importar e receber `Router`.
+
+**Por que fiz isso?** Para permitir que o usuário alterne entre o cadastro e a listagem.
+
+---
+
+## 3. Caminho completo de uma tarefa
+
+1. O usuário digita o nome e seleciona o prazo no HTML.
+2. `[(ngModel)]` atualiza as variáveis `nome` e `prazo` no TypeScript.
+3. Ao enviar o formulário, `(ngSubmit)` chama `cadastrar()`.
+4. O método cria o objeto `novaTarefa`.
+5. `this.tarefaService.adicionar(novaTarefa)` envia a tarefa ao serviço.
+6. O serviço guarda o objeto usando `push()`.
+7. O Angular navega para `/lista-tarefas`.
+8. `app.routes.ts` associa esse endereço ao componente `ListaTarefas`.
+9. O componente consulta o serviço usando `listar()`.
+10. `@for` percorre a lista e mostra as tarefas.
+11. Ao clicar em Concluir ou Remover, `(click)` chama o método correspondente no TypeScript.
+12. O componente solicita ao serviço a alteração dos dados, e a tela reflete a lista atualizada.
+
+## 4. Resumo para memorizar
+
+- **Interface:** define o formato dos dados.
+- **Serviço:** centraliza o armazenamento e as operações.
+- **TypeScript do componente:** contém a lógica da página.
+- **HTML:** mostra informações e recebe ações do usuário.
+- **`import`:** permite utilizar algo exportado de outro arquivo.
+- **Injeção de dependência:** permite ao Angular fornecer o serviço ao componente.
+- **`[(ngModel)]`:** sincroniza campos e variáveis.
+- **`(click)` e `(ngSubmit)`:** conectam ações do usuário a métodos.
+- **`@for`:** percorre listas para exibir seus itens.
+- **`{{ }}`:** mostra valores na tela.
+- **`app.routes.ts`:** associa endereços a componentes.
+- **`routerLink` e `Router`:** permitem navegar entre páginas.
+- **CSS:** define cores, tamanhos, espaçamentos e aparência.
+
+A ideia central é: o HTML apresenta a interface, o TypeScript executa a lógica, o serviço trabalha com os dados e o Angular conecta essas partes.

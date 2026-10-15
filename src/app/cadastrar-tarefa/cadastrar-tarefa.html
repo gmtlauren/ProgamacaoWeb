@@ -1,0 +1,37 @@
+<!-- (ngSubmit)="cadastrar()": quando o formulário for enviado, chama o método que você criou no TypeScript.
+
+[(ngModel)]="nome": conecta o campo à variável nome. O que você digitar ficará guardado nela.
+
+[(ngModel)]="prazo": faz a mesma coisa com a data.
+
+required: exige que o campo seja preenchido.
+
+type="submit": faz o botão enviar o formulário.
+
+routerLink: cria um link para navegar até a lista de tarefas. -->
+
+<h2>Cadastrar tarefa</h2>
+
+<form (ngSubmit)="cadastrar()">
+  <label for="nome">Nome da tarefa:</label>
+  <input
+    id="nome"
+    type="text"
+    name="nome"
+    [(ngModel)]="nome"
+    required
+  />
+
+  <label for="prazo">Prazo de conclusão:</label>
+  <input
+    id="prazo"
+    type="date"
+    name="prazo"
+    [(ngModel)]="prazo"
+    required
+  />
+
+  <button type="submit">Cadastrar</button>
+</form>
+
+<a routerLink="/lista-tarefas">Ver tarefas</a>

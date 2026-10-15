@@ -6,6 +6,7 @@
 
   <div class="input-grupo">
 
+    <!--Guarde o que eu digitei-->
     <input
       type="text"
       [(ngModel)]="novaMusica"
@@ -24,6 +25,8 @@
 
   <!-- Exibir as músicas utilizando @for -->
   <ul class="lista-musicas">
+
+    <!--Pegue cada música da lista e mostre na tela-->
 
     @for (musica of musicas; track musica) {
 

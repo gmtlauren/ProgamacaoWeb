@@ -1,0 +1,48 @@
+<!-- @if: verifica se a lista está vazia.
+
+@for: percorre a lista e mostra cada tarefa.
+
+{{ tarefa.nome }}: exibe o nome cadastrado.
+
+{{ tarefa.prazo }}: exibe a data.
+
+tarefa.concluida ? 'Concluída' : 'Pendente': mostra um status diferente conforme a tarefa foi concluída ou não.
+
+track $index: ajuda o Angular a identificar cada item pela posição na lista. -->
+
+<h2>Minhas tarefas</h2>
+    <!-- Essas expressões chamam os métodos que você criou no TypeScript e exibem os números na tela. -->
+    <p>Total de tarefas: {{ totalTarefas() }}</p>
+    <p>Concluídas: {{ tarefasConcluidas() }}</p>
+    <p>Pendentes: {{ tarefasPendentes() }}</p>
+
+
+@if (tarefas.length === 0) {
+  <p>Nenhuma tarefa cadastrada ainda.</p>
+} @else {
+  @for (tarefa of tarefas; track $index) {
+    <div>
+      <h3 [class.concluida]="tarefa.concluida">
+            {{ tarefa.nome }}
+      </h3>
+      <p>Prazo: {{ tarefa.prazo }}</p>
+      <p>Status: {{ tarefa.concluida ? 'Concluída' : 'Pendente' }}</p>
+    
+        <!-- (click) diz ao Angular para executar uma ação quando alguém clicar no botão.
+         concluir($index) vai chamar um método que criaremos no TypeScript.
+
+        remover($index) vai chamar o método de remoção.
+
+        $index é a posição da tarefa dentro da lista. -->
+        <button (click)="concluir($index)">
+        Concluir
+        </button>
+
+        <button (click)="remover($index)">
+        Remover
+        </button>
+
+    </div>
+  }
+}
+<a routerLink="/cadastrar-tarefa">Cadastrar nova tarefa</a>

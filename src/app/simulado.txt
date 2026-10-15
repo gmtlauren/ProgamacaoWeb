@@ -1,0 +1,505 @@
+# SIMULADO ANGULAR — CADASTRO E LISTAGEM DE TAREFAS
+
+## 1. OBJETIVO DA APLICAÇÃO
+
+- Criamos uma aplicação Angular para cadastrar, listar, concluir e remover tarefas.
+- Utilizamos HTML para estruturar as páginas.
+- Utilizamos CSS para personalizar as cores e o visual.
+- Utilizamos TypeScript para criar variáveis, funções e regras.
+- Utilizamos um Service para armazenar e gerenciar as tarefas.
+- Utilizamos uma Interface para definir a estrutura de cada tarefa.
+- Utilizamos Componentes para separar as telas.
+- Utilizamos Rotas para navegar entre as telas.
+
+## 2. INTERFACE TAREFA — tarefa.ts
+
+Código:
+
+export interface Tarefa {
+  nome: string;
+  prazo: string;
+  concluida: boolean;
+}
+
+Explicação:
+
+- `export`: permite utilizar a interface em outros arquivos.
+- `interface Tarefa`: define o formato de uma tarefa.
+- `nome: string`: o nome da tarefa deve ser um texto.
+- `prazo: string`: a data da tarefa é armazenada como texto.
+- `concluida: boolean`: indica se a tarefa foi concluída.
+- `true`: tarefa concluída.
+- `false`: tarefa pendente.
+- `;`: finaliza uma declaração.
+
+Para lembrar:
+- Interface define quais propriedades um objeto deve possuir.
+- `string` = texto.
+- `number` = número.
+- `boolean` = verdadeiro ou falso.
+
+## 3. SERVICE — tarefa-service.ts
+
+Objetivo:
+- Armazenar e gerenciar as tarefas em memória.
+- Centralizar as funções utilizadas pelos componentes.
+
+### Importações e configuração
+
+- `import { Injectable } from '@angular/core';`
+  - Importa o recurso que permite configurar um Service no Angular.
+
+- `import { Tarefa } from './tarefa';`
+  - Importa a Interface Tarefa.
+
+- `@Injectable({ providedIn: 'root' })`
+  - Permite que o Angular disponibilize o Service na aplicação.
+  - `root` faz com que seja compartilhado como uma instância global.
+
+- `export class TarefaService`
+  - Declara e exporta a classe do Service.
+
+### Lista de tarefas
+
+`private tarefas: Tarefa[] = [];`
+
+- `private`: a lista é acessada diretamente dentro do Service.
+- `tarefas`: nome da variável.
+- `Tarefa[]`: lista que contém objetos do tipo Tarefa.
+- `= []`: começa com uma lista vazia.
+
+### Método listar()
+
+`listar(): Tarefa[] { return this.tarefas; }`
+
+- Retorna todas as tarefas cadastradas.
+- `listar()`: nome do método.
+- `: Tarefa[]`: indica que retorna uma lista de tarefas.
+- `return`: devolve o resultado.
+- `this.tarefas`: acessa a lista pertencente ao Service.
+
+### Método adicionar()
+
+`adicionar(tarefa: Tarefa): void { this.tarefas.push(tarefa); }`
+
+- Recebe uma tarefa e adiciona à lista.
+- `tarefa: Tarefa`: parâmetro recebido pelo método.
+- `push()`: adiciona um item ao final do array.
+- `void`: indica que o método não retorna um valor.
+
+### Método remover()
+
+`remover(index: number): void { this.tarefas.splice(index, 1); }`
+
+- Remove uma tarefa da lista.
+- `index`: posição da tarefa.
+- `number`: indica que o índice é numérico.
+- `splice(index, 1)`: remove um item a partir daquela posição.
+- O número `1` significa remover somente um item.
+
+### Método marcarConcluida()
+
+`marcarConcluida(index: number): void { this.tarefas[index].concluida = true; }`
+
+- Marca uma tarefa como concluída.
+- `tarefas[index]`: acessa a tarefa naquela posição.
+- `.concluida = true`: altera o status para concluído.
+
+### Método relacionado ao prazo
+
+- Na nossa aplicação, o prazo é armazenado na propriedade `prazo` da Interface Tarefa.
+- O formulário recebe a data e a lista exibe essa data.
+- Se a prova exigir um método separado chamado `prazo de conclusão`, será necessário conferir o enunciado para definir exatamente sua função. O campo `prazo` sozinho não é um método.
+
+## 4. COMPONENTE CADASTRARTAREFA
+
+Arquivos:
+- `cadastrar-tarefa.ts`
+- `cadastrar-tarefa.html`
+- `cadastrar-tarefa.css`
+
+Objetivo:
+- Exibir o formulário.
+- Receber o nome e o prazo.
+- Criar uma tarefa.
+- Chamar o Service para armazená-la.
+- Navegar para a lista depois do cadastro.
+
+### Importações
+
+- `Component`: permite declarar um componente Angular.
+- `FormsModule`: habilita recursos de formulário, como `ngModel`.
+- `RouterLink`: permite criar links de navegação.
+- `Router`: permite navegar por código.
+- `TarefaService`: permite acessar os métodos do Service.
+
+### Variáveis
+
+`nome: string = '';`
+
+- Guarda o nome digitado.
+- Começa como texto vazio.
+
+`prazo: string = '';`
+
+- Guarda a data selecionada.
+- Começa como texto vazio.
+
+### Constructor
+
+`constructor(private tarefaService: TarefaService) {}`
+
+- Recebe o Service por injeção de dependência.
+- Permite chamar `this.tarefaService.adicionar()` e outros métodos.
+
+Quando usamos o Router:
+
+`constructor(private tarefaService: TarefaService, private router: Router) {}`
+
+- O `router` permite navegar para outra rota por meio de código.
+
+### Método cadastrar()
+
+`cadastrar(): void`
+
+- Executa a lógica de cadastro.
+- É chamado quando o formulário é enviado.
+
+Criamos um objeto:
+
+const novaTarefa = {
+  nome: this.nome,
+  prazo: this.prazo,
+  concluida: false
+};
+
+Explicação:
+- `const novaTarefa`: cria uma variável para guardar o novo objeto.
+- `nome: this.nome`: utiliza o nome digitado.
+- `prazo: this.prazo`: utiliza a data selecionada.
+- `concluida: false`: começa como pendente.
+
+Depois:
+
+`this.tarefaService.adicionar(novaTarefa);`
+
+- Envia o objeto ao Service.
+- O Service adiciona a tarefa à lista.
+
+`this.router.navigate(['/lista-tarefas']);`
+
+- Navega para a página de listagem depois do cadastro.
+
+### HTML do formulário
+
+- `<form>`: cria o formulário.
+- `(ngSubmit)="cadastrar()"`: chama o método ao enviar.
+- `<label>`: identifica um campo.
+- `<input type="text">`: campo de texto.
+- `<input type="date">`: campo de data.
+- `[(ngModel)]="nome"`: conecta o campo à variável nome.
+- `[(ngModel)]="prazo"`: conecta o campo à variável prazo.
+- `name="nome"` e `name="prazo"`: identificam os campos do formulário.
+- `required`: indica que o campo é obrigatório.
+- `<button type="submit">`: envia o formulário.
+- `routerLink="/lista-tarefas"`: cria um link para a listagem.
+
+## 5. COMPONENTE LISTATAREFAS
+
+Arquivos:
+- `lista-tarefas.ts`
+- `lista-tarefas.html`
+- `lista-tarefas.css`
+
+Objetivo:
+- Exibir as tarefas cadastradas.
+- Mostrar total, concluídas e pendentes.
+- Permitir concluir e remover tarefas.
+- Mostrar uma mensagem quando a lista estiver vazia.
+
+### Variável principal
+
+`tarefas: Tarefa[] = [];`
+
+- Guarda a lista que será exibida.
+- Começa vazia.
+- Recebe os dados do Service.
+
+### Constructor
+
+`constructor(private tarefaService: TarefaService) { this.tarefas = this.tarefaService.listar(); }`
+
+- Recebe o Service.
+- Chama `listar()`.
+- Coloca as tarefas na variável do componente.
+
+### Método concluir()
+
+concluir(index: number): void {
+  this.tarefaService.marcarConcluida(index);
+  this.tarefas = this.tarefaService.listar();
+}
+
+- Recebe a posição da tarefa.
+- Chama o Service para concluir.
+- Atualiza a lista local.
+
+### Método remover()
+
+remover(index: number): void {
+  this.tarefaService.remover(index);
+  this.tarefas = this.tarefaService.listar();
+}
+
+- Recebe a posição da tarefa.
+- Chama o Service para remover.
+- Atualiza a lista exibida.
+
+### Método totalTarefas()
+
+totalTarefas(): number {
+  return this.tarefas.length;
+}
+
+- `.length`: retorna a quantidade de itens.
+- Conta todas as tarefas, concluídas ou pendentes.
+
+### Método tarefasConcluidas()
+
+tarefasConcluidas(): number {
+  return this.tarefas.filter(tarefa => tarefa.concluida).length;
+}
+
+- `filter()`: filtra os itens que atendem a uma condição.
+- `tarefa => tarefa.concluida`: seleciona tarefas concluídas.
+- `.length`: conta quantas foram selecionadas.
+
+### Método tarefasPendentes()
+
+tarefasPendentes(): number {
+  return this.tarefas.filter(tarefa => !tarefa.concluida).length;
+}
+
+- `!`: significa negação.
+- `!tarefa.concluida`: seleciona tarefas não concluídas.
+- `.length`: conta as tarefas pendentes.
+
+## 6. HTML DA LISTA
+
+### Interpolação
+
+`{{ tarefa.nome }}`
+
+- Exibe o nome da tarefa.
+- `{{ }}` permite mostrar valores do TypeScript no HTML.
+
+`{{ totalTarefas() }}`
+
+- Executa o método e mostra seu resultado.
+
+### Condicional @if e @else
+
+@if (tarefas.length === 0) {
+  <p>Nenhuma tarefa cadastrada ainda.</p>
+} @else {
+  <!-- lista de tarefas -->
+}
+
+- `@if`: executa o bloco quando a condição é verdadeira.
+- `tarefas.length === 0`: verifica se não existem tarefas.
+- `===`: compara valores e tipos.
+- `@else`: executa quando a condição do `@if` é falsa.
+
+### Repetição @for
+
+@for (tarefa of tarefas; track $index) {
+  <div>
+    {{ tarefa.nome }}
+  </div>
+}
+
+- `@for`: repete um bloco para cada item da lista.
+- `tarefa of tarefas`: percorre cada tarefa.
+- `$index`: representa a posição atual.
+- `track $index`: ajuda o Angular a identificar cada item pela posição.
+
+### Operador ternário
+
+`{{ tarefa.concluida ? 'Concluída' : 'Pendente' }}`
+
+- É uma condição compacta.
+- Se `tarefa.concluida` for verdadeira, mostra Concluída.
+- Caso contrário, mostra Pendente.
+
+### Botão Concluir
+
+`(click)="concluir($index)"`
+
+- `(click)`: detecta o clique.
+- `concluir()`: chama o método do componente.
+- `$index`: envia a posição da tarefa.
+
+### Botão Remover
+
+`(click)="remover($index)"`
+
+- Detecta o clique.
+- Chama o método remover.
+- Envia a posição da tarefa que deve ser excluída.
+
+### Link para cadastro
+
+`<a routerLink="/cadastrar-tarefa">Cadastrar nova tarefa</a>`
+
+- Cria um link para a tela de cadastro.
+
+## 7. ROTAS — app.routes.ts
+
+Objetivo:
+- Definir os caminhos de cada componente.
+
+Importações:
+
+`import { Routes } from '@angular/router';`
+
+- Importa o tipo utilizado para declarar as rotas.
+
+Exemplo:
+
+{ path: 'cadastrar-tarefa', component: CadastrarTarefa },
+{ path: 'lista-tarefas', component: ListaTarefas }
+
+- `path`: define o endereço da rota.
+- `component`: define qual componente será exibido.
+
+Outros arquivos importantes:
+
+- `RouterLink`: habilita links de navegação no componente.
+- `RouterOutlet`: define o local em que a página da rota aparece.
+- `<router-outlet></router-outlet>`: espaço para exibir o componente selecionado.
+
+## 8. CSS — ESTILIZAÇÃO
+
+### Seletores
+
+- `h2`: seleciona títulos h2.
+- `p`: seleciona parágrafos.
+- `button`: seleciona botões.
+- `a`: seleciona links.
+- `.tarefa-card`: seleciona elementos com essa classe.
+- `.btn-concluir`: seleciona o botão Concluir.
+- `.btn-remover`: seleciona o botão Remover.
+- `:hover`: aplica um estilo ao passar o mouse.
+- `:focus`: aplica um estilo quando o campo está selecionado.
+- `:host`: seleciona o próprio componente Angular.
+
+### Cores e fontes
+
+- `color`: cor do texto.
+- `background`: fundo do elemento.
+- `font-size`: tamanho da fonte.
+- `font-family`: tipo da fonte.
+- `font-weight: bold`: texto em negrito.
+- `text-decoration: underline`: sublinha o texto.
+- `text-decoration: none`: remove a decoração do texto.
+
+### Espaçamento
+
+- `margin`: espaço externo.
+- `padding`: espaço interno.
+- `gap`: espaço entre elementos de um layout flex ou grid.
+- `margin-top`: margem superior.
+- `margin-bottom`: margem inferior.
+
+### Tamanho e layout
+
+- `width`: largura.
+- `max-width`: largura máxima.
+- `min-height`: altura mínima.
+- `display: block`: elemento em formato de bloco.
+- `display: flex`: ativa Flexbox.
+- `flex-direction: column`: organiza elementos em coluna.
+- `flex-wrap: wrap`: permite quebra de linha.
+- `box-sizing: border-box`: inclui padding e borda no tamanho calculado.
+
+### Bordas e efeitos
+
+- `border`: cria uma borda.
+- `border-radius`: arredonda os cantos.
+- `border-left`: cria borda à esquerda.
+- `box-shadow`: adiciona sombra.
+- `cursor: pointer`: mostra a mãozinha do mouse.
+- `transition: 0.2s`: suaviza a mudança de estilo.
+
+### Botões coloridos
+
+- `.btn-concluir`: fundo verde.
+- `.btn-remover`: fundo laranja.
+- `:hover`: muda a aparência quando o mouse passa por cima.
+
+### Classe dinâmica da tarefa
+
+`[class.concluida]="tarefa.concluida"`
+
+- Quando a tarefa está concluída, aplica a classe CSS.
+- A classe `.concluida` adiciona o sublinhado verde.
+
+## 9. COMO OS DADOS FUNCIONAM
+
+- O usuário preenche o formulário.
+- `ngModel` guarda os valores nas variáveis.
+- O método cadastrar() cria um objeto.
+- O Service armazena o objeto no array.
+- O Router navega para a lista.
+- A lista consulta os dados do Service.
+- O botão Concluir altera o status.
+- O botão Remover exclui a tarefa.
+- Os contadores calculam as quantidades.
+
+Importante:
+- Os dados ficam em memória enquanto a aplicação está aberta.
+- Atualizar a página do navegador pode apagar as tarefas, porque não estamos usando banco de dados nem armazenamento persistente.
+
+## 10. RESUMO PARA A PROVA
+
+- Interface: define o formato dos dados.
+- Service: centraliza o armazenamento e as operações.
+- Component: controla uma parte da interface.
+- Constructor: recebe dependências ou prepara o componente.
+- Método: executa uma ação.
+- Array: armazena vários itens.
+- `push()`: adiciona um item.
+- `splice()`: remove itens.
+- `filter()`: seleciona itens por condição.
+- `length`: conta itens.
+- `this`: acessa propriedades e métodos do objeto atual.
+- `return`: devolve um resultado.
+- `void`: indica que o método não retorna valor.
+- `@if`: condição.
+- `@else`: alternativa da condição.
+- `@for`: repetição.
+- `{{ }}`: interpolação.
+- `[(ngModel)]`: conecta campo e variável.
+- `(click)`: executa uma ação ao clicar.
+- `routerLink`: navegação por link.
+- `RouterOutlet`: local onde a rota é exibida.
+- CSS: aparência da aplicação.
+
+## 11. MACETES PARA MEMORIZAR
+
+- Adicionar = `push()`.
+- Remover = `splice()`.
+- Contar = `length`.
+- Filtrar = `filter()`.
+- Concluir = alterar `concluida` para `true`.
+- Pendente = `concluida` igual a `false`.
+- Texto no HTML = `{{ }}`.
+- Condição no HTML = `@if`.
+- Repetição no HTML = `@for`.
+- Clique = `(click)`.
+- Campo conectado = `[(ngModel)]`.
+- Navegar = `routerLink`.
+- Visual = CSS.
+- Dados e funções = TypeScript.
+- Estrutura = HTML.
+- Armazenamento compartilhado = Service.

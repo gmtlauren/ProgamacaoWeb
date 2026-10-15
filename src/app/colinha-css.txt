@@ -1,0 +1,244 @@
+COLINHA GERAL DE CSS — ANGULAR
+
+1. ESTRUTURA BÁSICA
+
+seletor { } : define onde o CSS será aplicado.
+
+; : finaliza uma propriedade.
+
+/* comentário */ : comentário que o navegador não executa.
+
+color: blue; : propriedade + valor.
+
+!important : força prioridade em algumas situações; evite usar sem necessidade.
+
+2. SELETORES
+
+h1 : seleciona todas as tags h1.
+
+p : seleciona todos os parágrafos.
+
+button : seleciona todos os botões.
+
+a : seleciona todos os links.
+
+nav : seleciona a área de navegação.
+
+input : seleciona campos de entrada.
+
+form : seleciona formulários.
+
+label : seleciona rótulos de campos.
+
+.container : seleciona elementos com class="container".
+
+.concluida : seleciona elementos com class="concluida".
+
+nav a : seleciona links dentro de nav.
+
+.tarefa-card button : seleciona botões dentro de um cartão.
+
+a:hover : aplica estilo quando o mouse passa sobre o link.
+
+input:focus : aplica estilo quando o campo está selecionado.
+
+:host : seleciona o próprio componente Angular.
+
+3. CORES E TEXTOS
+
+color: blue; : cor do texto.
+
+background: white; : cor de fundo.
+
+font-family: Arial, sans-serif; : tipo de fonte.
+
+font-size: 20px; : tamanho do texto.
+
+font-weight: bold; : texto em negrito.
+
+text-align: center; : centraliza o texto.
+
+text-decoration: none; : remove decoração, como o sublinhado do link.
+
+text-decoration: underline; : sublinha o texto.
+
+text-decoration-color: green; : cor do sublinhado.
+
+text-decoration-thickness: 2px; : espessura do sublinhado.
+
+line-height: 1.5; : altura das linhas do texto.
+
+4. ESPAÇAMENTOS
+
+margin: 20px; : espaço externo de 20px em todos os lados.
+
+padding: 20px; : espaço interno de 20px em todos os lados.
+
+margin-top: 10px; : espaço externo acima.
+
+margin-bottom: 10px; : espaço externo abaixo.
+
+margin: 20px 0; : 20px em cima e embaixo; zero nas laterais.
+
+padding: 10px 16px; : 10px em cima e embaixo; 16px nas laterais.
+
+margin: 8px 8px 0 0; : topo, direita, baixo e esquerda, nessa ordem.
+
+gap: 10px; : espaço entre os itens de um layout flex ou grid.
+
+5. TAMANHO E LAYOUT
+
+width: 100%; : ocupa a largura disponível.
+
+max-width: 500px; : limita a largura máxima.
+
+min-height: 100vh; : altura mínima igual à altura da janela.
+
+display: block; : faz o elemento se comportar como bloco.
+
+display: flex; : ativa o Flexbox.
+
+flex-direction: column; : organiza os itens em coluna.
+
+flex-wrap: wrap; : permite que os itens passem para outra linha.
+
+box-sizing: border-box; : inclui padding e borda no tamanho calculado.
+
+6. BORDAS E SOMBRAS
+
+border: 1px solid #ddd; : borda de 1px, linha contínua e cor cinza.
+
+border: none; : remove a borda.
+
+border-top: 1px solid #ddd; : cria borda superior.
+
+border-left: 5px solid blue; : cria borda esquerda azul.
+
+border-radius: 10px; : arredonda os cantos.
+
+border-color: blue; : altera a cor da borda.
+
+outline: 2px solid blue; : cria contorno externo.
+
+box-shadow: 0 4px 12px #00000010; : cria sombra.
+
+7. INTERAÇÃO E EFEITOS
+
+:hover : aplica estilo quando o mouse passa sobre o elemento.
+
+:focus : aplica estilo quando o elemento recebe foco.
+
+cursor: pointer; : mostra a mãozinha do mouse.
+
+transition: 0.2s; : suaviza mudanças visuais em 0,2 segundo.
+
+8. UNIDADES
+
+px : pixels.
+
+% : porcentagem do tamanho de referência.
+
+vh : porcentagem da altura da janela.
+
+rem : unidade baseada no tamanho da fonte raiz.
+
+9. CORES HEXADECIMAIS DO PROJETO
+
+#2870d8 : azul.
+
+#16a34a : verde.
+
+#f08c00 : laranja.
+
+#ffffff : branco.
+
+#263247 : azul-acinzentado escuro.
+
+#f4f6fb : cinza-azulado claro.
+
+#243b64 : azul-marinho.
+
+#e1e7f0 : cinza-claro para bordas.
+
+10. CLASSES DO PROJETO
+
+.container : organiza o conteúdo principal.
+
+.tarefa-card : estiliza o cartão de cada tarefa.
+
+.concluida : aplica o sublinhado à tarefa concluída.
+
+.btn-concluir : estiliza o botão verde.
+
+.btn-remover : estiliza o botão laranja.
+
+11. HTML + ANGULAR + CSS
+
+class="tarefa-card" : aplica uma classe CSS fixa.
+
+[class.concluida]="tarefa.concluida" : aplica ou remove a classe conforme o valor booleano.
+
+{{ tarefa.nome }} : exibe o nome da tarefa.
+
+(click)="concluir($index)" : executa uma função ao clicar.
+
+routerLink="/lista-tarefas" : navega para a rota indicada.
+
+<router-outlet></router-outlet> : exibe o componente da rota atual.
+
+12. DIFERENÇAS IMPORTANTES
+
+HTML : estrutura da página.
+
+CSS : aparência e organização visual.
+
+TypeScript : dados, variáveis e funções.
+
+Angular : conecta os componentes e controla a navegação e a atualização da interface.
+
+margin : espaço externo.
+
+padding : espaço interno.
+
+color : cor do texto.
+
+background : fundo.
+
+border : borda.
+
+gap : espaço entre itens de um layout.
+
+display: flex : organiza elementos.
+
+:hover : efeito ao passar o mouse.
+
+:focus : efeito ao selecionar um campo.
+
+13. MODELO PARA CONSULTAR
+
+h1 {
+color: #243b64;
+font-size: 30px;
+margin-bottom: 10px;
+}
+
+.card {
+background: white;
+padding: 20px;
+margin: 15px 0;
+border: 1px solid #e1e7f0;
+border-radius: 12px;
+box-shadow: 0 4px 12px #00000010;
+}
+
+button {
+padding: 10px 16px;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+transition: 0.2s;
+}
+
+button {
+opacity: 0.85;
+}

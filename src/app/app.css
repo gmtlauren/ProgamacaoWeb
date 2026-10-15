@@ -1,0 +1,54 @@
+/*  visual compartilhado por todas as páginas: fundo, fonte, cabeçalho e menu.*/
+
+:host {
+  display: block;
+  min-height: 100vh;
+  padding: 30px;
+  box-sizing: border-box;
+  background: #f4f6fb;
+  color: #263247;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.container h1 {
+  margin-bottom: 10px;
+  color: #243b64;
+  font-size: 30px;
+}
+
+.container p {
+  color: #64748b;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 25px 0;
+}
+
+nav a {
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: #e3eaf8;
+  color: #25477d;
+  text-decoration: none;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+nav a:hover {
+  background: #25477d;
+  color: white;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #dce3ef;
+  margin: 25px 0;
+}
