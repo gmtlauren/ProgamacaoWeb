@@ -1,0 +1,63 @@
+# COLINHA — GIT COMMIT E PUSH
+
+### 1. Conferir as alterações
+```bash
+git status
+```
+
+### 2. Adicionar os arquivos
+```bash
+git add .
+```
+
+### 3. Criar o commit
+```bash
+git commit -m "Atualiza sistema de tarefas Angular"
+```
+
+### 4. Enviar para o GitHub
+
+Se sua branch for `master`:
+```bash
+git push origin master
+```
+
+Se sua branch for `main`:
+```bash
+git push origin main
+```
+
+### 5. Conferir se ficou tudo certo
+```bash
+git status
+```
+
+Se aparecer:
+```text
+nothing to commit, working tree clean
+```
+
+Significa que não há alterações locais pendentes de commit. Se o `push` também terminou sem erros, suas alterações foram enviadas.
+
+---
+
+## Para descobrir sua branch
+```bash
+git branch --show-current
+```
+
+## Para consultar o último commit
+```bash
+git log -1 --oneline
+```
+
+## Para resumir tudo em quatro comandos
+
+```bash
+git add .
+git commit -m "Descreva sua atualização"
+git push origin master
+git status
+```
+
+**Atenção:** use `master` ou `main` conforme o nome da sua branch. Se o Git disser que não há nada para commitar, confira o `git status` antes de continuar.
